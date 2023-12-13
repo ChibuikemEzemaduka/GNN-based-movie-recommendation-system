@@ -123,21 +123,21 @@ loss_func = nn.MSELoss()
 
 '''Train using LightGCN'''
 #Initialize Model
-layers1 = 2
+layers1 = 1
 model1 = GNN_model.LightGCNConv(num_users=num_users, num_items=num_movies, embedding_dim=64, K=layers1)
 model1 = model1.to(device)
 # define parameters
-epochs1, batch_size1, lr1, epoch_per_lr_decay1 = 500, 10240, 1e-3, 100
+epochs1, batch_size1, lr1, epoch_per_lr_decay1 = 200, 10240, 1e-3, 1000
 #Train the models
 train_loss1, val_loss1, val_recall_at_ks1, RMSEs1 = train(model1, epochs1, batch_size1, lr1, epoch_per_lr_decay1, eval=False)
 
 
 '''Train Using NGCF'''
-layers2 = 2
+layers2 = 1
 model2 = GNN_model.NGCFConv(num_users=num_users, num_items=num_movies, embedding_dim=64, K=layers2)
 model2 = model2.to(device)
 # define parameters
-epochs2, batch_size2, lr2, epoch_per_lr_decay2 = 500, 10240, 1e-3, 100
+epochs2, batch_size2, lr2, epoch_per_lr_decay2 = 200, 10240, 1e-3, 1000
 #Train the models
 train_loss2, val_loss2, val_recall_at_ks2, RMSEs2 = train(model2, epochs2, batch_size2, lr2, epoch_per_lr_decay2, eval=False)
 
@@ -147,10 +147,10 @@ train_loss2, val_loss2, val_recall_at_ks2, RMSEs2 = train(model2, epochs2, batch
 #Make the Learning plots
 f1 = plt.figure()
 iters = [(epch + 1)*10 for epch in range(len(train_loss1))]
-plt.plot(iters, train_loss1, label='LightGCN train')
-plt.plot(iters, train_loss2, label='NGCF train')
-plt.plot(iters, val_loss1, label='LightGCN val')
-plt.plot(iters, val_loss2, label='NGCF val')
+plt.plot(iters, train_loss1, label='LightGCN train loss')
+plt.plot(iters, train_loss2, label='NGCF train loss')
+plt.plot(iters, val_loss1, label='LightGCN val loss')
+plt.plot(iters, val_loss2, label='NGCF val loss')
 plt.xlabel('Epoch')
 plt.ylabel('loss')
 plt.title('training and validation loss curve')
@@ -159,11 +159,11 @@ plt.show()
 plt.savefig('./experiment/losses.png')
 
 f2 = plt.figure()
-plt.plot(iters, val_recall_at_ks1, label='LightGCN')
-plt.plot(iters, val_recall_at_ks2, label='NGCF')
+plt.plot(iters, val_recall_at_ks1, label='LightGCN val recall')
+plt.plot(iters, val_recall_at_ks2, label='NGCF val recall')
 plt.xlabel('Epoch')
-plt.ylabel('recall_at_k')
-plt.title('recall_at_k curves')
+plt.ylabel('recall_at_20')
+plt.title('recall_at_20 curves')
 plt.legend()
 plt.show()
 plt.savefig('./experiment/recall.png')
